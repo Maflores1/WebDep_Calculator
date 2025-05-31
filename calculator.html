@@ -1,0 +1,136 @@
+//Mateo Flores Assignment
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>JavaScript Calculator</title>
+    <meta charset="utf-8" />
+    <style>
+      #calculator {
+        border: 1px solid black;
+        max-width: 300px;
+      }
+      div.row {
+        display: flex;
+        flex: 1;
+      }
+      div.button {
+        border: 1px solid #444444;
+        font-size: 2em;
+        flex: 1;
+        text-align: center;
+      }
+      #answerWindow {
+        font-size: 2em;
+        text-align: right;
+        height: 38px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="calculator">
+      <div class="row">
+        <div>Calculator</div>
+      </div>
+      <div id="answerWindow"></div>
+      <div class="row">
+        <div class="button"></div>
+        <div class="button"></div>
+        <div class="button">c</div>
+        <div class="button">*</div>
+      </div>
+      <div class="row">
+        <div class="button">7</div>
+        <div class="button">8</div>
+        <div class="button">9</div>
+        <div class="button">/</div>
+      </div>
+      <div class="row">
+        <div class="button">4</div>
+        <div class="button">5</div>
+        <div class="button">6</div>
+        <div class="button">-</div>
+      </div>
+      <div class="row">
+        <div class="button">1</div>
+        <div class="button">2</div>
+        <div class="button">3</div>
+        <div class="button">+</div>
+      </div>
+      <div class="row">
+        <div class="button"></div>
+        <div class="button">0</div>
+        <div class="button">.</div>
+        <div class="button">=</div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const answerWindow = document.getElementById("answerWindow");
+        let currentInput = "";
+
+        document
+          .getElementById("calculator")
+          .addEventListener("click", function (event) {
+            const target = event.target;
+
+            // Check if the clicked element is a button
+            if (target.classList.contains("button")) {
+              const buttonValue = target.textContent.trim();
+
+              if (buttonValue === "c") {
+                // Clear the answer window
+                currentInput = "";
+                answerWindow.textContent = "";
+              } else if (buttonValue === "=") {
+                // Calculate the result
+                try {
+                  const result = calculate(currentInput);
+                  answerWindow.textContent = result;
+                  currentInput = result.toString(); // Update currentInput to the result
+                } catch (error) {
+                  answerWindow.textContent = "Error";
+                  currentInput = "";
+                }
+              } else {
+                // Append the button value to the current input
+                currentInput += buttonValue;
+                answerWindow.textContent = currentInput;
+              }
+            }
+          });
+
+        function calculate(input) {
+          // Split the input into numbers and operators
+          const tokens = input
+            .split(/([\+\-\*\/])/)
+            .filter((token) => token.trim() !== "");
+          let result = parseFloat(tokens[0]);
+
+          for (let i = 1; i < tokens.length; i += 2) {
+            const operator = tokens[i];
+            const nextNumber = parseFloat(tokens[i + 1]);
+
+            switch (operator) {
+              case "+":
+                result += nextNumber;
+                break;
+              case "-":
+                result -= nextNumber;
+                break;
+              case "*":
+                result *= nextNumber;
+                break;
+              case "/":
+                result /= nextNumber;
+                break;
+            }
+          }
+
+          return result;
+        }
+      });
+    </script>
+  </body>
+</html>
